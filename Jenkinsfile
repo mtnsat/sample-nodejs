@@ -34,11 +34,16 @@ podTemplate(yaml: '''
                   volumeMounts:
                   - name: docker-socket
                     mountPath: /var/run
+                - name: node
+                  image: node:10.19.0
+                  command:
+                  - cat
+                  tty: true                  
 ''') {  
   node(POD_LABEL) {
 
        stage('Git sCM Checkout') {
-            git branch: 'main', credentialsId: 'gitssh-1', url: 'https://github.com/faisalbasha19/fleetman-webapp'
+            git branch: 'main', credentialsId: 'gitssh-1', url: 'https://github.com/faisalbasha19/sample-nodejs.git'
         }
     
         stage('Sonarqube') {
