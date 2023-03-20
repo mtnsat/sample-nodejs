@@ -4,7 +4,7 @@ def home = "/home/jenkins"
 def workspace = "${home}/workspace/build-docker-jenkins"
 def workdir = "${workspace}/src/localhost/docker-jenkins/"
 
-def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID}"
+def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/nodejs-app:${BUILD_ID}"
 def tag = "$repoName:latest"
 
 podTemplate(yaml: '''
@@ -35,7 +35,7 @@ podTemplate(yaml: '''
                   - name: docker-socket
                     mountPath: /var/run
                 - name: node
-                  image: node:10.19.0
+                  image: node:latest
                   command:
                   - cat
                   tty: true                  
@@ -57,16 +57,12 @@ podTemplate(yaml: '''
                      sh 'npm install'
                      sh 'npm build'
                    }
-            }
-          
-            timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-            }
+            }          
         }    
     
         stage('docker build') {
                container('docker'){
-                  sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID} .'                   
+                  sh 'docker version && docker build  -t qa-docker-nexus.mtnsat.io/dockerrepo/nodejs-app:${BUILD_ID} .'                   
                }
         }
     
@@ -77,7 +73,7 @@ podTemplate(yaml: '''
         }
         stage('docker push'){
                container('docker'){
-                   sh 'docker push qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID}'
+                   sh 'docker push qa-docker-nexus.mtnsat.io/dockerrepo/nodejs-app:${BUILD_ID}'
                }
         }
   }
