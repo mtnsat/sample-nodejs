@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  labels:
+    app: nodejs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-app
+        image: qa-docker-nexus.mtnsat.io/dockerrepo/nodejs-app:1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-svc
+  labels:
+    app: nodejs-app
+spec:
+  #type: LoadBalancer
+  #type: NodePort
+  ports:
+  - port: 80
+  #nodePort: 30001
+  selector:
+    app: nodejs-app
