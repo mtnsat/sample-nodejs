@@ -55,10 +55,9 @@ podTemplate(yaml: '''
                     container('node'){
                      sh 'node -v'
                      sh 'npm install'
-                     sh 'npm build'
                    }
-            }          
-        }    
+            } 
+        }
     
         stage('docker build') {
                container('docker'){
