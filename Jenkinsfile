@@ -77,6 +77,11 @@ podTemplate(yaml: '''
                    sh 'docker push qa-docker-nexus.mtnsat.io/dockerrepo/nodejs-app:${BUILD_ID}'
                }
         }
+
+        stage('Trigger Update Manifest') {
+            echo "triggering Update manifest Job"
+                build job: 'argocd-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_ID)]
+        }    
  
   }
 }
